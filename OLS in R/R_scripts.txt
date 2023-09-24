@@ -1,0 +1,47 @@
+# Libraries 
+library(stargazer)
+library(tidyverse)
+library(datarium)
+library(corrplot)
+
+# Loading Data frame
+
+data <- read.csv("Group9.csv")
+
+# without NA data frame
+
+data_1 <- data[complete.cases(data), ]
+
+# OLS Equatio
+# Gross.Capital.Formation = B + B1 Unemployment_rate + B2 GDP_growth_percap + B3 CPI + B4 HDI + B5 Gini + e
+
+reg <- lm(Gross.Capital.Formation ~ Unemployment_rate+GDP_growth_percap+CPI+HDI+Gini, data=data)
+
+summary(reg)
+
+stargazer(reg)
+
+#  correlation matrix for the independent variables
+ind <- subset(data, select=c(Unemployment_rate,GDP_growth_percap,HDI,CPI,Gini))
+cor(ind)
+stargazer(cor(ind))
+plot(ind)
+
+# without NA
+
+ind_1 <- subset(data_1, select=c(Unemployment_rate,GDP_growth_percap,HDI,CPI,Gini))
+cor(ind_1)
+stargazer(cor(ind_1))
+plot(ind_1)
+
+# the log-log OLS
+
+log.reg <- lm(Gross.Capital.Formation ~ log(Unemployment_rate)+log(GDP_growth_percap)+log(CPI)+log(HDI)+log(Gini), data=data)
+summary(log.reg)
+stargazer(log.reg)
+
+# OLS with dummy Variable
+
+d.reg <- lm(Gross.Capital.Formation ~ Unemployment_rate+GDP_growth_percap+CPI+HDI+Gini+Tr.p, data=data)
+summary(d.reg)
+stargazer(d.reg)
